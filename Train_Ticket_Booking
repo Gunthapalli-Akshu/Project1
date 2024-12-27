@@ -1,0 +1,120 @@
+#include <stdio.h>
+#include <string.h>
+
+// Structure for train details
+struct Train 
+{
+    int trainNumber;
+    char trainName[50];
+    char source[30];
+    char destination[30];
+    float fare;
+};
+
+// Structure for passenger details
+struct Passenger 
+{
+    char name[50];
+    int age;
+    int trainNumber;
+};
+
+// Function prototypes
+void displayTrains(struct Train trains[], int count);
+void bookTicket(struct Train trains[], int trainCount, struct Passenger passengers[], int *passengerCount);
+void displayBookedTickets(struct Passenger passengers[], int passengerCount);
+
+int main() {
+    struct Train trains[3] = 
+	{
+        {101, "Express 1", "City A", "City B", 500.0},
+        {102, "Express 2", "City C", "City D", 700.0},
+        {103, "Express 3", "City E", "City F", 600.0}
+	};
+
+    struct Passenger passengers[100];
+    int passengerCount = 0;
+    int choice;
+
+    do {
+        printf("\n--- Train Ticket Booking System ---\n");
+        printf("1. Display Available Trains\n");
+        printf("2. Book Ticket\n");
+        printf("3. Display Booked Tickets\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                displayTrains(trains, 3);
+                break;
+            case 2:
+                bookTicket(trains, 3, passengers, &passengerCount);
+                break;
+            case 3:
+                displayBookedTickets(passengers, passengerCount);
+                break;
+            case 4:
+                printf("Exiting system. Thank you!\n");
+                break;
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    } while (choice != 4);
+
+    return 0;
+}
+
+// Function to display available trains
+void displayTrains(struct Train trains[], int count) {
+    printf("\nAvailable Trains:\n");
+    printf("Train No\tTrain Name\tSource\t\tDestination\tFare\n");
+    for (int i = 0; i < count; i++) {
+        printf("%d\t\t%s\t\t%s\t\t%s\t\t%.2f\n", trains[i].trainNumber, trains[i].trainName, trains[i].source, trains[i].destination, trains[i].fare);
+    }
+}
+
+// Function to book a ticket
+void bookTicket(struct Train trains[], int trainCount, struct Passenger passengers[], int *passengerCount) {
+    char name[50];
+    int age, trainNumber, found = 0;
+
+    printf("\nEnter Passenger Name: ");
+    scanf("%s", name);
+    printf("Enter Passenger Age: ");
+    scanf("%d", &age);
+    printf("Enter Train Number: ");
+    scanf("%d", &trainNumber);
+
+    for (int i = 0; i < trainCount; i++) {
+        if (trains[i].trainNumber == trainNumber) {
+            found = 1;
+            break;
+        }
+    }
+
+    if (found) {
+        strcpy(passengers[*passengerCount].name, name);
+        passengers[*passengerCount].age = age;
+        passengers[*passengerCount].trainNumber = trainNumber;
+        (*passengerCount)++;
+        printf("Ticket booked successfully!\n");
+    } else {
+        printf("Invalid Train Number. Please try again.\n");
+    }
+}
+
+// Function to display booked tickets
+void displayBookedTickets(struct Passenger passengers[], int passengerCount) {
+    if (passengerCount == 0) {
+        printf("\nNo tickets booked yet.\n");
+        return;
+    }
+
+    printf("\nBooked Tickets:\n");
+    printf("Passenger Name\tAge\tTrain Number\n");
+    for (int i = 0; i < passengerCount; i++) {
+        printf("%s\t\t%d\t%d\n", passengers[i].name, passengers[i].age, passengers[i].trainNumber);
+    }
+}
